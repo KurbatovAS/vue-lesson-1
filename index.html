@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue JS</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .circle {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        border: 1px solid black;
+        display: inline-block;
+        margin: 10px;
+      }
+      .red {
+        background: red;
+      }
+      .blue {
+        background: blue;
+      }
+      .green {
+        background: green;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <!-- --- ### --- ### --- ### --- ### --- ### --- ### --- ### --- -->
+
+      <!-- интерполяция -->
+      <h1>String: {{ name }}</h1>
+      <h4>Number: {{ number }}</h4>
+
+      <!-- интерполяция: арифметические выражения -->
+      <h4>Sum (10 + 60): {{ 10+60 }}</h4>
+
+      <!-- интерполяция: вызов функции -->
+      <h4>Method: {{ sayHello() }}</h4>
+
+      <!-- интерполяция: тернарный оператор -->
+      <h4>If statement {{ isOk ? "I am OK" : "I am not OK!!!" }}</h4>
+
+      <!-- интерполяция: цепочка вызовов разных методов  -->
+      <h4>Functions: {{ string.split("").reverse().join("") }}</h4>
+
+      <!-- --- ### --- ### --- ### --- ### --- ### --- ### --- ### --- -->
+
+      <!-- v-bind: использование директивы для привязывания контекста -->
+      <h4><a v-bind:href="url" target="_blank">{{ url }}</a></h4>
+
+      <!-- v-bind (ярлык): использование директивы в сокращённой форме -->
+      <h4>
+        <a :href="url" target="_blank"
+          >{{ url }} с ярлыком для директивы v-bind</a
+        >
+      </h4>
+
+      <!-- --- ### --- ### --- ### --- ### --- ### --- ### --- ### --- -->
+
+      <!-- v-html: используется для изменения внутреннего HTML-кода элемента DOM -->
+      <h4 v-html="link"></h4>
+
+      <!-- --- ### --- ### --- ### --- ### --- ### --- ### --- ### --- -->
+
+      <!-- v-on: директива для прослушивания событий -->
+      <h4>
+        <!-- модификтор события .prevent отменяющий стандартное событие -->
+        <a href="http://google.com" target="_blank" v-on:click.prevent=""
+          >Google2</a
+        >
+      </h4>
+
+      <h4 v-on:mousemove="handleMouseMove">
+        X: {{ x }} / Y: {{ y }}
+
+        <!-- модификатор событий -->
+        <span v-on:mousemove.stop="">Не изменять координаты мыши</span>
+      </h4>
+
+      <!-- цепочка использования модификаторов событий (по кнопкам Enter и Space) -->
+      <input type="text" v-on:keyup.enter.space="alertValue" />
+
+      <div>
+        <h4>Счётчик = {{ counter }}</h4>
+        <button type="button" v-on:click="counter++">Увеличить на 1</button>
+      </div>
+
+      <div>
+        <h4 v-on:mouseover="onHover">
+          Счётчик 2 {{increase}} = {{ counter2 }}
+        </h4>
+        <button
+          type="button"
+          v-on:click="riseCounter(1, 'изменён на 1', $event)"
+        >
+          Увеличить на 1
+        </button>
+
+        <!-- v-on (ярлык): директива для прослушивания событий в сокращённой форме -->
+        <button type="button" @click="riseCounter(5, 'изменён на 5', $event)">
+          Увеличить на 5
+        </button>
+      </div>
+
+      <!-- --- ### --- ### --- ### --- ### --- ### --- ### --- ### --- -->
+
+      <!-- Модель для работы с формами + модификатор события .lazy -->
+      <!-- <input type="text" @input="inputValue = $event.target.value" :value="inputValue"
+      /> -->
+      <input type="text" v-model.lazy="inputValue" />
+      <h4>{{ inputValue }}</h4>
+
+      <!-- работы с CSS классами -->
+
+      <input type="text" v-model.lazy="color" />
+      <input type="text" v-model.lazy="height" />
+      <br />
+
+      <!-- <div
+        class="circle"
+        @click="isActive = !isActive"
+        :class="{'red': isActive, 'green': !isActive}" 
+      ></div> -->
+
+      <!-- стили классами -->
+      <div
+        class="circle"
+        @click="isActive = !isActive"
+        :class="getCssClasses"
+      ></div>
+
+      <div class="circle" :class="[color, {'red': isActive}]"></div>
+      <!-- стили инлайн стилями -->
+
+      <!-- 1 вариант -->
+      <!-- <div
+        class="circle"
+        :style="{'background': color, 'height': height + 'px'}"
+      ></div> -->
+
+      <!-- 2 вариант -->
+      <div class="circle" :style="circleClasses"></div>
+
+      <!-- 3 вариант -->
+      <div
+        class="circle"
+        :style="[circleClasses, {'width': height + 'px'}]"
+      ></div>
+      <br />
+
+      <!-- --- ### --- ### --- ### --- ### --- ### --- ### --- ### --- -->
+
+      <!-- v-if / v-else / v-else-if управление отображением элементов -->
+      <!-- <button type="button" @click="isVisible = !isVisible">Toggle</button> -->
+      <!-- <h4 v-if="isVisible">I'm visible!</h4> -->
+      <!-- <h4 v-else>No, I'm not!</h4> -->
+
+      <!-- конструкция v-else-if -->
+      <!-- <input type="text" v-model="type" />
+      <h4 v-if="type === 'a'">A</h4>
+      <h4 v-else-if="type === 'b'">B</h4>
+      <h4 v-else-if="type === 'c'">C</h4>
+      <h4 v-else>Not match</h4> -->
+
+      <!-- группировка элементов при помощи тега template -->
+      <button type="button" @click="isVisible = !isVisible">Toggle</button>
+      <template v-if="isVisible">
+        <h4>I am title</h4>
+        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit.</p>
+      </template>
+
+      <template v-else>
+        <h4 style="color: red">I am title</h4>
+        <p style="color: blue">
+          Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+        </p>
+      </template>
+
+      <!-- --- ### --- ### --- ### --- ### --- ### --- ### --- ### --- -->
+
+      <!-- v-show vs v-if директива  -->
+      <!-- Директива v-show не убирает элемент из DOM дерева-->
+      <!-- <button type="button" @click="isVisible = !isVisible">Toggle</button> -->
+      <!-- <h4 v-show="isVisible">I am visible</h4> -->
+      <!-- <h4 v-show="!isVisible">You can't see me</h4> -->
+
+      <!-- --- ### --- ### --- ### --- ### --- ### --- ### --- ### --- -->
+
+      <!-- работа со списками -->
+      <ul>
+        <!-- вывод списком массива простых строк -->
+        <li v-for="(person, index) in people">{{ index + 1 }}. {{ person }}</li>
+        <!-- <li v-for="(person, index) of people">{{ index + 1 }}. {{ person }}</li> -->
+
+        <!-- вывод списком массива объектов -->
+        <!-- <li v-for="(person, index) in people2">
+          {{ index + 1 }}. {{ person.name }} - <b>{{person.age}}</b>
+        </li> -->
+      </ul>
+
+      <ol>
+        <!-- вывод списком сгенерированных чисел с заданным диапазоном -->
+        <!-- <li v-for="num in 4">{{ num }}</li> -->
+        <li v-for="num of 4">{{ num }}</li>
+      </ol>
+
+      <!-- вывод списком свойств и значений объекта -->
+      <ul>
+        <li v-for="(value, key, index) in person">
+          <em>{{ index +1 }}</em> - <b>{{ key }}</b>: {{ value }}
+        </li>
+      </ul>
+
+      <!-- --- ### --- ### --- ### --- ### --- ### --- ### --- ### --- -->
+
+      <!-- оптимизация приложения с computed -->
+      <h4>Counter 1: {{ counter }} / Counter 2: {{ counter2 }}</h4>
+      <h4>Result: {{ result() }}</h4>
+      <h4>Computed result: {{ computedResult }}</h4>
+      <!-- Отслеживание изменений с watch -->
+      <h4>Watched result: {{ watchedResult }}</h4>
+
+      <button @click="add">Add</button>
+      <button @click="sub">Sub</button>
+      <button @click="counter2++">Add counter 2</button>
+
+      <!-- --- ### --- ### --- ### --- ### --- ### --- ### --- ### --- -->
+
+      <!-- Доступ к DOM элементам -->
+      <h4 ref="heading">{{ title }}</h4>
+      <button @click="updateFirstTitle">Update title</button>
+    </div>
+
+    <!-- подключение глобального скрипта vue -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <script>
+      const { createApp } = Vue;
+
+      createApp({
+        data() {
+          return {
+            name: "Vue",
+            number: 100,
+            isOk: false,
+            string: "My name is Andrey",
+            url: "http://google.com",
+            link: '<a href="http://google.com">Google</a>',
+            counter: 0,
+            counter2: 0,
+            increase: "",
+            x: 0,
+            y: 0,
+            inputValue: "Initial value",
+            isActive: false,
+            color: "blue",
+            height: "",
+            isVisible: true,
+            type: "a",
+            people: ["Vlad", "Max", "Elena", "Sergey"],
+            people2: [
+              { name: "Vlad", age: 20 },
+              { name: "Max", age: 25 },
+              { name: "Elena", age: 30 },
+            ],
+            person: {
+              name: "Max",
+              age: 50,
+              job: "Frontend",
+            },
+            watchedResult: "",
+            title: "Hello, I am Vue",
+          };
+        },
+
+        computed: {
+          getCssClasses: function () {
+            return {
+              red: this.isActive,
+              green: !this.isActive,
+            };
+          },
+
+          circleClasses: function () {
+            return {
+              background: this.color,
+              height: this.height + "px",
+            };
+          },
+
+          computedResult: function () {
+            console.log("Computed result was called");
+            return this.counter > 3 ? "More than 3" : "Less than 3";
+          },
+        },
+
+        methods: {
+          changeName: function (event) {
+            event.target.value =
+              "" || null || undefined
+                ? (this.name = "Vue")
+                : (this.name = event.target.value);
+          },
+
+          sayHello: function () {
+            return "I'm function!";
+          },
+
+          riseCounter: function (num, str, event) {
+            this.counter2 += num;
+            this.increase = str;
+            if (num === 1) {
+              event.target.style.color = "blue";
+            } else if (num === 5) {
+              event.target.style.color = "yellow";
+            }
+          },
+
+          onHover: function (event) {
+            event.target.style.color = "red";
+          },
+          handleMouseMove: function (event) {
+            this.x = event.clientX;
+            this.y = event.clientY;
+          },
+
+          alertValue: function (event) {
+            alert(event.target.value);
+          },
+
+          add: function () {
+            this.counter++;
+          },
+
+          sub: function () {
+            this.counter--;
+          },
+
+          result: function () {
+            console.log("Result was called");
+            return this.counter > 3 ? "More than 3" : "Less than 3";
+          },
+
+          updateFirstTitle: function () {
+            console.log(this.$refs);
+            this.title = "New title";
+            this.$refs.heading.style.color = "red";
+          },
+
+          // getCssClasses: function () {
+          //   return {
+          //     red: this.isActive,
+          //     green: !this.isActive,
+          //   };
+          // },
+
+          // clickOnGoogle: function (event) {
+          //   event.preventDefault();
+          // },
+        },
+
+        watch: {
+          counter: function (value) {
+            console.log("from watch object", value);
+            return value > 3
+              ? (this.watchedResult = "More than 3")
+              : (this.watchedResult = "Less than 3");
+          },
+        },
+
+        // --- ### --- : Свойство template
+
+        // template: "<div><h1>{{ title }}</h1></div>",
+
+        // --- ### --- : Жизненный цикл
+        beforeCreate: function () {
+          console.log("Before Create");
+        },
+        created: function () {
+          console.log("Created");
+        },
+        beforeMount: function () {
+          console.log("Before Mount");
+        },
+        mounted: function () {
+          console.log("Mounted");
+        },
+        beforeUpdate: function () {
+          console.log("Before Update");
+        },
+        updated: function () {
+          console.log("Updated");
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>
